@@ -12,5 +12,6 @@
 */
 
 Route::group(array('before'=>'API' ,'after'=>'afterAPI') ,function (){
-	Route::get('lol','HomeController@basic');
+	Route::post('add_user', 'HomeController@add_user');
+	
 });

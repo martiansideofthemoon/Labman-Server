@@ -20,7 +20,6 @@ App::before(function($request)
         $data ="\nFound matches at at ".$t."\n----------------------------------\n\n";
 	}
 	fwrite($file,$data);
-	
 });
 App::after(function($request, $response)
 {

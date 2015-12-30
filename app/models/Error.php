@@ -8,6 +8,7 @@ class Error{
 		'404' => "404 Error : URL Not Found",
 		'100' => "Input field required : " ,
 		'101' => "" ,
+		'1' => "Invalid user ID!"
 	);
 	// Error type
 	public static function make($type=0 , $code = 0 , $field="")
