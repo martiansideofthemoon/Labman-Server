@@ -16,7 +16,9 @@ class Error{
 		'7' => "subcolumns should be null or have an array",
 		'8' => "subcolumn should have a unit and title field",
 		'9' => "specifications must have columns field",
-		'10' => "No experiment found!"
+		'10' => "No experiment found!",
+		'11' => "This result does not have this experiment id",
+		'12' => "This result does not have this user id"
 	);
 	// Error type
 	public static function make($type=0 , $code = 0 , $field="")

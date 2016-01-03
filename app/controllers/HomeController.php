@@ -114,7 +114,71 @@ class HomeController extends BaseController {
 			return Error::make(1, 10);
 		}
 		$experiment->exp_id = intval($experiment->exp_id);
-		$experiment->specifications = json_decode($experiment->specifications);
+		$experiment->specifications = json_decode($experiment->specifications, true);
 		return Error::success("Experiment found!", array('experiment' => $experiment));
+	}
+
+	public function add_result() {
+		$requirements = ['exp_id', 'user_id', 'data'];
+		$check  = self::check_requirements($requirements);
+		if($check) {
+			return Error::make(0, 100, $check);
+		}
+		$experiment = Experiment::where('exp_id', '=', Input::get('exp_id'))->first();
+		if (is_null($experiment)) {
+			return Error::make(1, 10);
+		}
+		$user = User::where('user_id', '=', Input::get('user_id'))->first();
+		if (is_null($user)) {
+			return Error::make(1, 1);
+		}
+		if (Input::has('result_id')) {
+			$res = Result::where('result_id', '=', Input::get('result_id'))->first();
+			if (intval(Input::get('exp_id')) != intval($res->exp_id)) {
+				return Error::make(1, 11);
+			}
+			if (intval(Input::get('user_id')) != intval($res->user_id)) {
+				return Error::make(1, 12);
+			}
+		}
+		$columns = json_decode($experiment->specifications, true)["columns"];
+		$results = json_decode(Input::get('data'), true);
+		foreach ($results as $reading) {
+			foreach($columns as $column) {
+				if (array_key_exists($column["title"], $reading)) {
+					if (!is_null($column["subcolumns"]) && sizeof($column["subcolumns"]) > 0) {
+						foreach ($column["subcolumns"] as $subcolumn) {
+							if (!array_key_exists($subcolumn["title"], $reading[$column["title"]])) {
+								return Error::make(101, 101, "Column ".$column["title"]." has missing subcolumn ".$subcolumn["title"]);
+							}
+						}
+					}
+				} else {
+					return Error::make(101, 101, "Missing column ".$column["title"]);
+				}
+			}
+		}
+		if (Input::has('result_id')) {
+			try {
+				Result::where('result_id', '=', intval(Input::get('result_id')))->update(array(
+					'data' => json_encode($results),
+				));
+				return Error::success("Results successfully updated", array('result_id' => intval(Input::get('result_id'))));
+			}
+			catch (Exception $e) {
+				return Error::make(101,101,$e->getMessage());
+			}
+		} else {
+			$res = new Result;
+			$res->data = json_encode($results);
+			$res->user_id = intval(Input::get('user_id'));
+			$res->exp_id = intval(Input::get('exp_id'));
+			try {
+				$res->save();
+				return Error::success("Result successfully added!", array('result_id' => $res->id));
+			} catch(Exception $e) {
+				return Error::make(101, 101, $e->getMessage());
+			}
+		}
 	}
 }
