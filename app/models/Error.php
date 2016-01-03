@@ -8,7 +8,15 @@ class Error{
 		'404' => "404 Error : URL Not Found",
 		'100' => "Input field required : " ,
 		'101' => "" ,
-		'1' => "Invalid user ID!"
+		'1' => "Invalid user ID!",
+		'3' => "specifications->columns need to be array of columns",
+		'4' => "column / subcolumn should have string title",
+		'5' => "column / subcolumn should have string unit",
+		'6' => "column should have title, unit and subcolumn field",
+		'7' => "subcolumns should be null or have an array",
+		'8' => "subcolumn should have a unit and title field",
+		'9' => "specifications must have columns field",
+		'10' => "No experiment found!"
 	);
 	// Error type
 	public static function make($type=0 , $code = 0 , $field="")

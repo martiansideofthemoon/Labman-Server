@@ -13,5 +13,7 @@
 
 Route::group(array('before'=>'API' ,'after'=>'afterAPI') ,function (){
 	Route::post('add_user', 'HomeController@add_user');
-	
+	Route::post('add_experiment', 'HomeController@add_experiment');
+	Route::get('search_experiments', 'HomeController@search_experiments');
+	Route::get('get_experiment', 'HomeController@get_experiment');
 });
